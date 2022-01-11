@@ -1,6 +1,18 @@
 {
   "reports": [
     {
+      "title": "Borrowers Report",
+      "borrowers": [
+        {
+          "first_name": "JANE"
+        },
+        {
+          "first_name": "JOHN"
+        }
+      ],
+      "shared_address": true
+    },
+    {
       "title": "Residences Report",
       "residences": [
         {
@@ -10,20 +22,6 @@
           "zip": "75028"
         }
       ]
-    },
-    {
-      "title": "Borrowers Report",
-      "borrowers": [
-        {
-          "first_name": "JANE",
-          "last_name": "DOE"
-        },
-        {
-          "first_name": "JOHN",
-          "last_name": "DOE"
-        }
-      ],
-      "shared_address": true
     }
   ]
 }
