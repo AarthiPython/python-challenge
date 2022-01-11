@@ -52,6 +52,7 @@ def main(event, context=None):  # pylint: disable=unused-argument
 
     # Confirm event is valid EventBridge -> SQS payload
     loans = []
+
     for record in event.get('Records', [{}]):
         if not all(
             key in record for key in ['source', 'detail-type', 'detail']
@@ -71,6 +72,14 @@ def main(event, context=None):  # pylint: disable=unused-argument
             continue
 
     logger.info('Service recieved loans: %s', json.dumps(loans, indent=2))
+    flag = True
+    for check_address in loans:
+        for address in check_address['applications']:
+            for addressKey,addressValue in address['borrower']['mailingAddress'].items():
+                if str(addressValue) == str(address['coborrower']['mailingAddress'][addressKey]):
+                    flag = True
+                else:
+                    flag = False
 
     # Generate Manifests
     reports = []
@@ -88,4 +97,17 @@ def main(event, context=None):  # pylint: disable=unused-argument
         reports.extend(projection.get('reports', []))
 
     # Reformat report output and return
+    for report in reports:
+        if report['title'] == 'Residences Report':
+            temp_address = []
+            for index, residence in enumerate(report['residences'],start=0):
+                if not residence['street'] in temp_address:
+                    temp_address.append(residence['street'])
+                else:
+                    del report['residences'][index]
+        if  report['title'] == 'Borrowers Report':
+            report['shared_address'] = flag
+            for borrower in report['borrowers']:
+                if 'last_name' in borrower:
+                    del borrower['last_name']
     return {'reports': reports}

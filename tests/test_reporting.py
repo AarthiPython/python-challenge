@@ -43,7 +43,6 @@ def generate_event(detail=None):
 
 if __name__ == '__main__':
     from handler import main
-
     with open('loandata.json') as file:
         event = generate_event(json.load(file))
     response = main(event)
